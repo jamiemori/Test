@@ -11,8 +11,8 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0">
   <MAINGROUP id="ZCvsPB" name="test">
     <GROUP id="{84154932-B1F9-A8F6-0531-946BD0E98DF4}" name="Source">
-      <FILE id="NODXl6" name="Volume.h" compile="0" resource="0" file="Source/Volume.h"/>
-      <FILE id="OosGoy" name="Volume.cpp" compile="1" resource="0" file="Source/Volume.cpp"/>
+      <FILE id="JsB2nP" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
+      <FILE id="E0o1di" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
       <FILE id="nQ3lkg" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="Zzqg8n" name="PluginProcessor.h" compile="0" resource="0"
