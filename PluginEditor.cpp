@@ -7,22 +7,34 @@ TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
     
-    setSize (200,200); //set size of the window (x pixels, y pixels)
+    setSize (300,300); //set size of the window (x pixels, y pixels)
+
     sliderVolume.setRange(0, 1.0, 0.1); //set the range for the sliderVolume object (min, max, increment)
     sliderVolume.setSliderStyle (Slider::LinearVertical); //set the slider style (enumerated type)
-    sliderVolume.setTextBoxStyle (Slider::NoTextBox, false, 90, 0); //set textboxstyle 
-    sliderVolume.setTextValueSuffix ("sliderVolume");
+    sliderVolume.setTextBoxStyle (Slider::TextBoxBelow, false, 90, 10); //set textboxstyle 
     sliderVolume.addListener (this); //Registers a listener to receive events when this button's state changes. 
     
     sliderFilter.setRange(0.0, 0.49, 0.05); //set the range for the sliderVolume object (min, max, increment)
     sliderFilter.setSliderStyle (Slider::RotaryVerticalDrag); //set the slider style (enumerated type)
-    sliderFilter.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); //set textboxstyle 
-    sliderFilter.setTextValueSuffix ("sliderFilter");
+    sliderFilter.setTextBoxStyle(Slider::TextBoxBelow, false, 90, 10); //set textboxstyle 
     sliderFilter.addListener (this);  //Registers a listener to receive events when this button's state changes.
+
+    sliderOscfreq.setRange (200.0, 6000.0, 50.0);
+    sliderOscfreq.setSliderStyle (Slider::LinearVertical);
+    sliderOscfreq.setTextBoxStyle (Slider::TextBoxBelow, false, 90, 10);
+    sliderOscfreq.addListener (this);
+
+    buttonStart.setButtonText ("Start");
+    buttonStart.addListener (this);
     
     //make the objects visible in the window
     addAndMakeVisible (&sliderVolume);
     addAndMakeVisible (&sliderFilter);
+    addAndMakeVisible (&sliderOscfreq);
+    addAndMakeVisible (&buttonStart);
+
+    startTimer(50);
+
 }
 
 TestAudioProcessorEditor::~TestAudioProcessorEditor()
@@ -47,19 +59,46 @@ void TestAudioProcessorEditor::paint (Graphics& g)
 void TestAudioProcessorEditor::resized()
 {
     sliderVolume.setBounds(10,50,200,200);
-    sliderVolume.setSize(100,100);
     sliderFilter.setBounds(100,50,200,200);
+    sliderOscfreq.setBounds (200,50,200,200);   
+    buttonStart.setBounds (200,150,200,200);
+     
+    sliderVolume.setSize(100,100);
     sliderFilter.setSize(100,100);
+    sliderOscfreq.setSize (100,100);
+    buttonStart.setSize(100,100);
+}
+
+void TestAudioProcessorEditor::timerCallback()
+{
+    TestAudioProcessor* processor = getProcessor();
+
+    sliderVolume.setValue(processor->Volume, dontSendNotification);
+    sliderFilter.setValue(processor->frequency, dontSendNotification);
+    sliderOscfreq.setValue(processor->oscfrequency, dontSendNotification);
+    buttonStart.setToggleState(processor->togglestate, dontSendNotification);
 }
 
 void TestAudioProcessorEditor::sliderValueChanged (Slider* sliderMoved)
 {
     if (&sliderVolume == sliderMoved)
     {
-        processor.Volume = sliderVolume.getValue(); //reads current state of slider and pass it to Volume in processor.cpp 
-    }
+        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::volumeParameter, (float)sliderVolume.getValue());
+	}   
     else if (&sliderFilter == sliderMoved)
     {
-        processor.frequency = sliderFilter.getValue(); //reads current state of slider and pass it to frequency in processor.cpp 
+        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::frequencyParameter, (float)sliderFilter.getValue());
+    }
+    else if (&sliderOscfreq == sliderMoved)
+    {
+        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::oscfrequencyParameter, (float)sliderOscfreq.getValue());
+    }
+}
+
+void TestAudioProcessorEditor::buttonClicked (Button* button)
+{
+    if (&buttonStart == button)
+    {
+        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::togglestateParameter, buttonStart.getToggleState());
     }
 }

@@ -3,6 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Filter.h"
+#include "Oscillator.h"
 
 
 //==============================================================================
@@ -55,11 +56,24 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
+    //==============================================================================
+    enum Parameters
+    {
+        volumeParameter = 0,
+        frequencyParameter,
+        oscfrequencyParameter,
+        togglestateParameter,
+        numParameters
+    };
+    
     float Volume; //declare Volume variable to adjust volume
-    float frequency; //frequency variable to adjust frequency
+    float frequency; //frequency variable to adjust 
+    float oscfrequency;
+    bool togglestate;
+    
 private:
     Filter filter; //Filter class object 
+    Oscillator osc; 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
 };
 

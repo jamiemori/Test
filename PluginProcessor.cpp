@@ -4,8 +4,13 @@
 //==============================================================================
 TestAudioProcessor::TestAudioProcessor()
 {
-  Volume = 0.7; //initialize the Volume at 0.7
-  frequency = 0.0; 
+
+  // Set default values:
+  Volume = 0.0;
+  frequency = 0.0;
+  oscfrequency = 200.0;
+  togglestate = false;
+  
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -19,21 +24,84 @@ const String TestAudioProcessor::getName() const
 
 int TestAudioProcessor::getNumParameters()
 {
-    return 0;
+    return numParameters;
 }
 
 float TestAudioProcessor::getParameter (int index)
 {
-    return 0.0f;
+    switch (index)
+    {
+      case volumeParameter: 
+        return Volume; 
+        break;
+
+      case frequencyParameter: 
+        return frequency;
+        break;
+
+      case togglestateParameter: 
+        return togglestate; 
+        break;
+
+      case oscfrequencyParameter:
+        return oscfrequency;
+        break;
+
+      default: 
+        return 0.0f; 
+        break;
+    }
 }
 
 void TestAudioProcessor::setParameter (int index, float newValue)
 {
+    switch (index)
+    {
+      case volumeParameter: 
+        Volume = newValue;
+        break;
+
+	  case frequencyParameter:
+        frequency = newValue;
+        break;
+
+    case oscfrequencyParameter:
+        oscfrequency = newValue;
+        break;
+
+	  case togglestateParameter:
+        togglestate = (bool)newValue;
+        break;
+
+      default:
+        break;
+    }
 }
 
 const String TestAudioProcessor::getParameterName (int index)
 {
-    return String();
+    switch (index)
+    {
+      case volumeParameter: 
+        return "Volume";
+        break;
+
+      case frequencyParameter: 
+        return "frequency";
+        break;
+
+      case oscfrequencyParameter:
+        return "oscfrequency";
+        break;
+
+      case togglestateParameter: 
+        return "togglestate";
+        break;
+
+      default: 
+        break;
+    }
+    return String::empty;
 }
 
 const String TestAudioProcessor::getParameterText (int index)
@@ -115,35 +183,51 @@ void TestAudioProcessor::changeProgramName (int index, const String& newName)
 //==============================================================================
 void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-
 }
 
 void TestAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
 }
 
 void TestAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 { 
 
-  const int numChannels = buffer.getNumChannels(); //read number of input??? channels
+  const int numInputChannels = getNumInputChannels(); //read number of input??? channels
   const int numSamples = buffer.getNumSamples(); //read numbers of samples in channel
   const int numOutputChannels = getNumOutputChannels(); //get number of output channels
-  
-  float* leftData = buffer.getWritePointer(0); //return writeable pointer to channel 0 (left channel)
-  float* rightData = buffer.getWritePointer(1); //return writeable pointer to channel 1 (right channel)
-  filter.changeFrequency(frequency); // read current frequency value and call Filter class function 
-  for(long i=0; i<buffer.getNumSamples();i++) //loop over number of samples in buffer
-    {
-      filter.setFrequency(&leftData[i], &rightData[i], Volume); //setFrequency function call (DSP part)
-    }
+  const double sampleRate = getSampleRate();
 
-  // clear the buffer
-   for (int i = numChannels; i < numOutputChannels; ++i)  //clear out output buffers
+  if (togglestate == false)
+  {
+    for (int channel = 0; channel < numInputChannels ; channel++)
     {
-       buffer.clear (i, 0, buffer.getNumSamples());
-    } 
+      float* channelData = buffer.getWritePointer(channel); //return writeable pointer to channel
+    
+      for(long i=0; i<buffer.getNumSamples(); i++) //loop over number of samples in buffer
+      {
+        float in = channelData[i];
+        float out = 0.0;
+        channelData[i] = out;
+      }
+    }
+  }
+
+  else
+  { 
+    //float in = channelData[i];
+  	osc.gen(buffer, oscfrequency, numSamples);
+    //for (channel = 0; channel < numInputChannels; ++channel)
+    //filter.setFrequency(&in, Volume);
+    /*out = in * Volume;
+    channelData[i] = out;*/
+  }
+  
+    
+  // clear the buffer
+   for (int i = numInputChannels; i < numOutputChannels; ++i)
+  {
+    buffer.clear (i, 0, buffer.getNumSamples());
+  }
   // End of Process Block
 }
 
