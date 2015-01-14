@@ -20,7 +20,7 @@ public:
 Oscillator();
 ~Oscillator();
 
-void gen(AudioSampleBuffer &outputBuffer, float oscfrequency, int numSamples) override;
+void gen(AudioSampleBuffer &outputBuffer, float oscfrequency, int numSamples, int waveform) override;
 
 private:
 double currentAngle, angleDelta;

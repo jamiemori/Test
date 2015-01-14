@@ -19,13 +19,22 @@ public:
     void timerCallback();
     void sliderValueChanged (Slider* sliderMoved) override; //Call sliderValueChanged function (pass SliderObject pointer)
     void buttonClicked (Button* button);
-
+    
+    enum waveform
+    {
+        Sine = 0,
+        Saw,
+        Square 
+    } wave;
+    
 private:
     TestAudioProcessor& processor;
     Slider sliderVolume; //declare sliderVolume object
     Slider sliderFilter; //declare sliderFilter object
     Slider sliderOscfreq;
+    TextButton waveform;
     ToggleButton buttonStart;
+
 
     TestAudioProcessor* getProcessor() const
     {

@@ -24,6 +24,9 @@ TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
     sliderOscfreq.setTextBoxStyle (Slider::TextBoxBelow, false, 90, 10);
     sliderOscfreq.addListener (this);
 
+    waveform.setButtonText("Sine");
+    waveform.addListener(this);
+
     buttonStart.setButtonText ("Start");
     buttonStart.addListener (this);
     
@@ -31,6 +34,7 @@ TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
     addAndMakeVisible (&sliderVolume);
     addAndMakeVisible (&sliderFilter);
     addAndMakeVisible (&sliderOscfreq);
+    addAndMakeVisible (&waveform);
     addAndMakeVisible (&buttonStart);
 
     startTimer(50);
@@ -62,10 +66,12 @@ void TestAudioProcessorEditor::resized()
     sliderFilter.setBounds(100,50,200,200);
     sliderOscfreq.setBounds (200,50,200,200);   
     buttonStart.setBounds (200,150,200,200);
+    waveform.setBounds(10,150,200,200);
      
     sliderVolume.setSize(100,100);
     sliderFilter.setSize(100,100);
     sliderOscfreq.setSize (100,100);
+    waveform.setSize(100,100);
     buttonStart.setSize(100,100);
 }
 
@@ -100,5 +106,28 @@ void TestAudioProcessorEditor::buttonClicked (Button* button)
     if (&buttonStart == button)
     {
         getProcessor()->setParameterNotifyingHost (TestAudioProcessor::togglestateParameter, buttonStart.getToggleState());
+    }
+    else if (&waveform == button)
+    {
+        if (waveform.getButtonText() == "Sine")
+        {
+            waveform.setButtonText("Saw");
+            getProcessor()->setParameterNotifyingHost (TestAudioProcessor::waveformParameter, Saw);
+
+        }
+           
+        else if (waveform.getButtonText() == "Saw")
+        {
+            waveform.setButtonText("Square");
+            getProcessor()->setParameterNotifyingHost(TestAudioProcessor::waveformParameter, Square);
+          
+        }
+
+        else if (waveform.getButtonText() == "Square")
+        {
+            waveform.setButtonText("Sine");
+            getProcessor()->setParameterNotifyingHost (TestAudioProcessor::waveformParameter, Sine);
+  
+        }                
     }
 }

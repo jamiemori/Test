@@ -8,7 +8,8 @@ TestAudioProcessor::TestAudioProcessor()
   // Set default values:
   Volume = 0.0;
   frequency = 0.0;
-  oscfrequency = 200.0;
+  oscfrequency = 0.0;
+  waveform = 0;
   togglestate = false;
   
 }
@@ -43,6 +44,10 @@ float TestAudioProcessor::getParameter (int index)
         return togglestate; 
         break;
 
+	  case waveformParameter:
+        return waveform;
+        break;
+
       case oscfrequencyParameter:
         return oscfrequency;
         break;
@@ -61,15 +66,19 @@ void TestAudioProcessor::setParameter (int index, float newValue)
         Volume = newValue;
         break;
 
-	  case frequencyParameter:
+  	  case frequencyParameter:
         frequency = newValue;
         break;
 
-    case oscfrequencyParameter:
+      case oscfrequencyParameter:
         oscfrequency = newValue;
         break;
 
-	  case togglestateParameter:
+      case waveformParameter:
+        waveform = (int)newValue;
+        break;
+
+  	  case togglestateParameter:
         togglestate = (bool)newValue;
         break;
 
@@ -92,6 +101,10 @@ const String TestAudioProcessor::getParameterName (int index)
 
       case oscfrequencyParameter:
         return "oscfrequency";
+        break;
+
+      case waveformParameter:
+        return "waveForm";
         break;
 
       case togglestateParameter: 
@@ -215,7 +228,7 @@ void TestAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& mi
   else
   { 
     //float in = channelData[i];
-  	osc.gen(buffer, oscfrequency, numSamples);
+  	osc.gen(buffer, oscfrequency, numSamples, waveform);
     //for (channel = 0; channel < numInputChannels; ++channel)
     //filter.setFrequency(&in, Volume);
     /*out = in * Volume;

@@ -63,12 +63,14 @@ public:
         frequencyParameter,
         oscfrequencyParameter,
         togglestateParameter,
+        waveformParameter,
         numParameters
     };
     
     float Volume; //declare Volume variable to adjust volume
     float frequency; //frequency variable to adjust 
     float oscfrequency;
+    int waveform;
     bool togglestate;
     
 private:
