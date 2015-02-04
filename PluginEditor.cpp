@@ -1,133 +1,179 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-
 //==============================================================================
-TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
+RiserAudioProcessorEditor::RiserAudioProcessorEditor (RiserAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    
-    setSize (300,300); //set size of the window (x pixels, y pixels)
-
-    sliderVolume.setRange(0, 1.0, 0.1); //set the range for the sliderVolume object (min, max, increment)
-    sliderVolume.setSliderStyle (Slider::LinearVertical); //set the slider style (enumerated type)
-    sliderVolume.setTextBoxStyle (Slider::TextBoxBelow, false, 90, 10); //set textboxstyle 
-    sliderVolume.addListener (this); //Registers a listener to receive events when this button's state changes. 
-    
-    sliderFilter.setRange(0.0, 0.49, 0.05); //set the range for the sliderVolume object (min, max, increment)
-    sliderFilter.setSliderStyle (Slider::RotaryVerticalDrag); //set the slider style (enumerated type)
-    sliderFilter.setTextBoxStyle(Slider::TextBoxBelow, false, 90, 10); //set textboxstyle 
-    sliderFilter.addListener (this);  //Registers a listener to receive events when this button's state changes.
-
-    sliderOscfreq.setRange (200.0, 6000.0, 50.0);
-    sliderOscfreq.setSliderStyle (Slider::LinearVertical);
-    sliderOscfreq.setTextBoxStyle (Slider::TextBoxBelow, false, 90, 10);
-    sliderOscfreq.addListener (this);
-
-    waveform.setButtonText("Sine");
-    waveform.addListener(this);
-
-    buttonStart.setButtonText ("Start");
-    buttonStart.addListener (this);
+    setLookAndFeel (&mlaf);
     
     //make the objects visible in the window
-    addAndMakeVisible (&sliderVolume);
-    addAndMakeVisible (&sliderFilter);
-    addAndMakeVisible (&sliderOscfreq);
-    addAndMakeVisible (&waveform);
-    addAndMakeVisible (&buttonStart);
+    
+    sliderVolume.setRange(0, 1.0, 0.001); //set the range for the sliderVolume object (min, max, increment)
+    sliderVolume.setSliderStyle (Slider::RotaryVerticalDrag); //set the slider style (enumerated type)
+    sliderVolume.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    sliderVolume.addListener (this); //Registers a listener to receive events when this button's state changes. 
 
+    font.setTypefaceName("Gulim");
+    labelVolume.setText("Volume", dontSendNotification);
+    labelVolume.setFont(font);
+    labelVolume.setJustificationType(Justification::centred);
+    labelVolume.setColour(Label::textColourId, Colour (0xff93bfd2));
+    labelVolume.attachToComponent(&sliderVolume, false);
+
+    sliderAttack.setRange(0, 1.0, 0.001);
+    sliderAttack.setSliderStyle (Slider::RotaryVerticalDrag);
+    sliderAttack.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    sliderAttack.addListener (this);
+
+    font.setTypefaceName("Gulim");
+    labelAttack.setText("Attack", dontSendNotification);
+    labelAttack.setFont(font);
+    labelAttack.setJustificationType (Justification::centred);
+    labelAttack.setColour (Label::textColourId, Colour (0xff93bfd2));
+    labelAttack.attachToComponent(&sliderAttack, false);
+
+    sliderSustain.setRange(0, 1.0, 0.001);
+    sliderSustain.setSliderStyle (Slider::RotaryVerticalDrag);
+    sliderSustain.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    sliderSustain.addListener (this);
+
+    font.setTypefaceName("Gulim");
+    labelSustain.setText("Sustain", dontSendNotification);
+    labelSustain.setFont(font);
+    labelSustain.setJustificationType (Justification::centred);
+    labelSustain.setColour (Label::textColourId, Colour (0xff93bfd2));
+    labelSustain.attachToComponent(&sliderSustain, false);
+
+    sliderDecay.setRange(0, 1.0, 0.001);
+    sliderDecay.setSliderStyle (Slider::RotaryVerticalDrag);
+    sliderDecay.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    sliderDecay.addListener (this);
+
+    font.setTypefaceName("Gulim");
+    labelDecay.setText("Decay", dontSendNotification);
+    labelDecay.setFont(font);
+    labelDecay.setJustificationType (Justification::centred);
+    labelDecay.setColour (Label::textColourId, Colour (0xff93bfd2));
+    labelDecay.attachToComponent(&sliderDecay, false);
+
+    sliderRelease.setRange(0, 1.0, 0.001);
+    sliderRelease.setSliderStyle (Slider::RotaryVerticalDrag);
+    sliderRelease.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    sliderRelease.addListener (this);
+
+    font.setTypefaceName("Gulim");
+    labelRelease.setText("Release", dontSendNotification);
+    labelRelease.setFont(font);
+    labelRelease.setJustificationType (Justification::centred);
+    labelRelease.setColour (Label::textColourId, Colour (0xff93bfd2));
+    labelRelease.attachToComponent(&sliderRelease, false);
+
+    addAndMakeVisible (&sliderAttack);
+	addAndMakeVisible (&sliderVolume);
+    addAndMakeVisible (&sliderSustain);
+    addAndMakeVisible (&sliderDecay);
+    addAndMakeVisible (&sliderRelease);
+
+	setSize (550,200); 
     startTimer(50);
 
 }
 
-TestAudioProcessorEditor::~TestAudioProcessorEditor()
+RiserAudioProcessorEditor::~RiserAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void TestAudioProcessorEditor::paint (Graphics& g)
+void RiserAudioProcessorEditor::paint (Graphics& g)
 {
     // fill the whole window white
-    g.fillAll (Colours::white);
- 
-    // set the current drawing colour to black
-    g.setColour (Colours::black);
- 
-    // set the font size and draw text to the screen
-    g.setFont (15.0f);
- 
-    g.drawFittedText ("Blah", 0, 0, getWidth(), 30, Justification::centred, 1);
+    g.fillAll (Colours::black);
+    font.setTypefaceName("Gulim");
+    g.setFont(font);
+    g.setColour (Colour (0xff93bfd2));
+    g.setFont(61.0f);
+    g.drawFittedText ("Riser", 0,0, 200, 200, Justification::topLeft, 1, 1.0f);
+    g.setColour (Colours::white);
+    g.setFont(65.0f);
+    g.drawFittedText ("Riser", 0,0, 200, 200, Justification::topLeft, 1, 1.0f);
 }
 
-void TestAudioProcessorEditor::resized()
+void RiserAudioProcessorEditor::resized()
 {
-    sliderVolume.setBounds(10,50,200,200);
-    sliderFilter.setBounds(100,50,200,200);
-    sliderOscfreq.setBounds (200,50,200,200);   
-    buttonStart.setBounds (200,150,200,200);
-    waveform.setBounds(10,150,200,200);
-     
-    sliderVolume.setSize(100,100);
-    sliderFilter.setSize(100,100);
-    sliderOscfreq.setSize (100,100);
-    waveform.setSize(100,100);
-    buttonStart.setSize(100,100);
+    sliderVolume.setBounds(50,100,200,200);
+    sliderAttack.setBounds(150,100,200,200);
+    sliderSustain.setBounds(250,100,200,200);
+    sliderDecay.setBounds(350,100,200,200);
+    sliderRelease.setBounds(450,100,200,200);
+   
+    sliderVolume.setSize(75, 75);
+    sliderAttack.setSize(75,75);
+    sliderSustain.setSize(75,75);
+    sliderDecay.setSize(75,75);
+    sliderRelease.setSize(75,75);
 }
 
-void TestAudioProcessorEditor::timerCallback()
+void RiserAudioProcessorEditor::timerCallback()
 {
-    TestAudioProcessor* processor = getProcessor();
+    RiserAudioProcessor* processor = getProcessor();
 
     sliderVolume.setValue(processor->Volume, dontSendNotification);
-    sliderFilter.setValue(processor->frequency, dontSendNotification);
-    sliderOscfreq.setValue(processor->oscfrequency, dontSendNotification);
-    buttonStart.setToggleState(processor->togglestate, dontSendNotification);
+    sliderAttack.setValue(processor->Attack, dontSendNotification);
+    sliderDecay.setValue(processor->Decay, dontSendNotification);
+    sliderSustain.setValue(processor->Sustain, dontSendNotification);
+    sliderRelease.setValue(processor->Release, dontSendNotification);
 }
 
-void TestAudioProcessorEditor::sliderValueChanged (Slider* sliderMoved)
+void RiserAudioProcessorEditor::sliderValueChanged (Slider* sliderMoved)
 {
     if (&sliderVolume == sliderMoved)
     {
-        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::volumeParameter, (float)sliderVolume.getValue());
+        getProcessor()->setParameterNotifyingHost (RiserAudioProcessor::volumeParameter, (float)sliderVolume.getValue());
 	}   
-    else if (&sliderFilter == sliderMoved)
+    else if (&sliderAttack == sliderMoved)
     {
-        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::frequencyParameter, (float)sliderFilter.getValue());
+        getProcessor()->setParameterNotifyingHost (RiserAudioProcessor::attackParameter, (float)sliderAttack.getValue());
     }
-    else if (&sliderOscfreq == sliderMoved)
+    else if (&sliderDecay == sliderMoved)
     {
-        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::oscfrequencyParameter, (float)sliderOscfreq.getValue());
+        getProcessor()->setParameterNotifyingHost (RiserAudioProcessor::decayParameter, (float)sliderDecay.getValue());
+    }
+    else if (&sliderSustain == sliderMoved)
+    {
+        getProcessor()->setParameterNotifyingHost (RiserAudioProcessor::sustainParameter, (float)sliderSustain.getValue());
+    }
+    else if (&sliderRelease == sliderMoved)
+    {
+        getProcessor()->setParameterNotifyingHost (RiserAudioProcessor::releaseParameter, (float)sliderRelease.getValue());
     }
 }
 
-void TestAudioProcessorEditor::buttonClicked (Button* button)
+
+/*void RiserAudioProcessorEditor::buttonClicked (Button* button)
 {
-    if (&buttonStart == button)
-    {
-        getProcessor()->setParameterNotifyingHost (TestAudioProcessor::togglestateParameter, buttonStart.getToggleState());
-    }
-    else if (&waveform == button)
+    if (&waveform == button)
     {
         if (waveform.getButtonText() == "Sine")
         {
             waveform.setButtonText("Saw");
-            getProcessor()->setParameterNotifyingHost (TestAudioProcessor::waveformParameter, Saw);
+            getProcessor().setParameterNotifyingHost (RiserAudioProcessor::waveformParameter, Saw);
 
         }
            
         else if (waveform.getButtonText() == "Saw")
         {
             waveform.setButtonText("Square");
-            getProcessor()->setParameterNotifyingHost(TestAudioProcessor::waveformParameter, Square);
+            getProcessor().setParameterNotifyingHost(RiserAudioProcessor::waveformParameter, Square);
           
         }
 
         else if (waveform.getButtonText() == "Square")
         {
             waveform.setButtonText("Sine");
-            getProcessor()->setParameterNotifyingHost (TestAudioProcessor::waveformParameter, Sine);
+            getProcessor().setParameterNotifyingHost (RiserAudioProcessor::waveformParameter, Sine);
   
         }                
     }
 }
+*/

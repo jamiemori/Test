@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="UQ8e8i" name="Riser" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.yourcompany.Riser" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="0" buildRTAS="0" buildAAX="0"
+              pluginName="riser" pluginDesc="" pluginManufacturer="" pluginManufacturerCode=""
+              pluginCode="rz" pluginChannelConfigs="{1, 1}, {2, 2}" pluginIsSynth="1"
+              pluginWantsMidiIn="1" pluginProducesMidiOut="1" pluginSilenceInIsSilenceOut="0"
+              pluginEditorRequiresKeys="1" pluginAUExportPrefix="RiserAU" pluginRTASCategory=""
+              aaxIdentifier="" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              jucerVersion="3.1.0">
+  <MAINGROUP id="ZCvsPB" name="Riser">
+    <GROUP id="{84154932-B1F9-A8F6-0531-946BD0E98DF4}" name="Source">
+      <FILE id="hhtzmJ" name="Envelope.cpp" compile="1" resource="0" file="Source/Envelope.cpp"/>
+      <FILE id="AbnBcU" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
+      <FILE id="NUxAne" name="GUI tester.cpp" compile="0" resource="0" file="Source/GUI tester.cpp"/>
+      <FILE id="pDJMAq" name="MinimalLook.cpp" compile="0" resource="0" file="Source/MinimalLook.cpp"/>
+      <FILE id="nhRPVt" name="MinimalLook.h" compile="0" resource="0" file="Source/MinimalLook.h"/>
+      <FILE id="SK2Xq2" name="RiserOscillator.cpp" compile="0" resource="0"
+            file="Source/RiserOscillator.cpp"/>
+      <FILE id="oYKJot" name="RiserOscillator.h" compile="0" resource="0"
+            file="Source/RiserOscillator.h"/>
+      <FILE id="O9rlV2" name="RiserSynthSound.cpp" compile="1" resource="0"
+            file="Source/RiserSynthSound.cpp"/>
+      <FILE id="acT6Ri" name="RiserSynthSound.h" compile="0" resource="0"
+            file="Source/RiserSynthSound.h"/>
+      <FILE id="JsB2nP" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
+      <FILE id="E0o1di" name="Filter.cpp" compile="0" resource="0" file="Source/Filter.cpp"/>
+      <FILE id="nQ3lkg" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="Zzqg8n" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="akPzUR" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="YvxPSg" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2010 targetFolder="Builds/VisualStudio2010" vstFolder="C:\SDKs\VST3 SDK">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="Riser"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="test"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_graphics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../juce/modules"/>
+      </MODULEPATHS>
+    </VS2010>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>

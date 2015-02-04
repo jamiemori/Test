@@ -2,46 +2,35 @@
 #define PLUGINEDITOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PluginProcessor.h"
+#include "MinimalLook.h"
 
-class TestAudioProcessorEditor  : public AudioProcessorEditor,
-                                  public Slider::Listener,
-                                  public Button::Listener,
-                                  public Timer
+class RiserAudioProcessorEditor  :		public AudioProcessorEditor,
+                                        public Slider::Listener,
+                                        public Timer
 {
 public:
 
-    TestAudioProcessorEditor (TestAudioProcessor&);
-    ~TestAudioProcessorEditor();
+    RiserAudioProcessorEditor (RiserAudioProcessor&);
+    ~RiserAudioProcessorEditor();
 
     void paint (Graphics&) override;
     void resized() override;
     void timerCallback();
     void sliderValueChanged (Slider* sliderMoved) override; //Call sliderValueChanged function (pass SliderObject pointer)
-    void buttonClicked (Button* button);
-    
-    enum waveform
-    {
-        Sine = 0,
-        Saw,
-        Square 
-    } wave;
-    
+
 private:
-    TestAudioProcessor& processor;
-    Slider sliderVolume; //declare sliderVolume object
-    Slider sliderFilter; //declare sliderFilter object
-    Slider sliderOscfreq;
-    TextButton waveform;
-    ToggleButton buttonStart;
-
-
-    TestAudioProcessor* getProcessor() const
+    RiserAudioProcessor& processor;
+    Slider sliderVolume, sliderAttack, sliderSustain, sliderDecay, sliderRelease;
+    Label labelVolume, labelAttack, labelSustain, labelDecay, labelRelease;
+    MinimalLook mlaf;
+    Font font;
+   
+    RiserAudioProcessor* getProcessor() const
     {
-        return static_cast <TestAudioProcessor*> (getAudioProcessor());
+        return static_cast <RiserAudioProcessor*> (getAudioProcessor());
     }
- 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessorEditor)
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RiserAudioProcessorEditor)
 };
 
 

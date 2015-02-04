@@ -2,25 +2,27 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Filter.h"
-#include "Oscillator.h"
+#include "RiserSynthSound.h"
+
 
 
 //==============================================================================
 /**
 */
-class TestAudioProcessor  : public AudioProcessor
+
+class Envelope;
+class RiserAudioProcessor  : public AudioProcessor 
 {
 public:
     //==============================================================================
-    TestAudioProcessor();
-    ~TestAudioProcessor();
+    RiserAudioProcessor();
+    ~RiserAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
-
     void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
+    //int setWaveForm();
 
     //==============================================================================
     AudioProcessorEditor* createEditor() override;
@@ -57,26 +59,30 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     //==============================================================================
+    
     enum Parameters
     {
         volumeParameter = 0,
-        frequencyParameter,
-        oscfrequencyParameter,
-        togglestateParameter,
-        waveformParameter,
+        attackParameter,
+        decayParameter,
+        sustainParameter,
+        releaseParameter,
         numParameters
     };
+    Parameters parameters;
     
-    float Volume; //declare Volume variable to adjust volume
-    float frequency; //frequency variable to adjust 
-    float oscfrequency;
-    int waveform;
-    bool togglestate;
-    
+    float Volume; 
+    float Attack;
+	float Sustain;
+	float Decay;
+	float Release;
+
 private:
-    Filter filter; //Filter class object 
-    Oscillator osc; 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
+    Synthesiser synth;
+    MidiKeyboardState keyboardstate;
+    ScopedPointer<Envelope> envelope;
+  
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RiserAudioProcessor)
 };
 
 

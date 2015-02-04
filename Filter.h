@@ -15,21 +15,27 @@ class Filter
 {
 public:
 
-Filter(); //Constructor
-~Filter(); //Destructor
+Filter(); 
+~Filter(); 
 
-void changeFrequency(float frequency); //changes the frequency value in Filter class
-void setFrequency(float* in, float Volume); //DSP part which uses frequency variable
+enum filterMode
+{
+	LowPass = 0;
+	HighPass;
+	BandPass;
+	numFilterModes;
+};
+
+inline void setCutOff (float newCutoff) {cutOff = newCutOff; calculateFeedbackAmount();};
+inline void setResonance (float newResonance) {resonance = newResonance; calculateFeedbackAmount();};
+inline void setFilterMode (filterMode newMode) {mode = newMode;};
 
 private:
-//variables for First order feed-forward filter (p.74 Will Pirkle)
-//Difference equation is y(n) = a_o* x(n) = a_1* x(n-1)
-float frequency; //"frequency" but is just an arbitrary value between 0.0 and 0.49.
 
-//Variables for left channel
-float m_f_a0; //a_o coefficient
-float m_f_a1; //a_1 coefficient 
-float m_f_z1; // Delay element
+float cutOff;
+float resonance;
+inline void calculateFeedbackAmount() {feedBackAmount = resonance + resonance/(1.0 - cutOff);};
+filterMode mode;
 
 };
 
