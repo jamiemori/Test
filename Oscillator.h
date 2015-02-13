@@ -12,6 +12,7 @@
 #define OSCILLATOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include 
 
 class Oscillator
 {
@@ -20,10 +21,10 @@ public:
 Oscillator();
 ~Oscillator();
 
-void gen(AudioSampleBuffer &outputBuffer, float oscfrequency, int numSamples, int waveform) override;
+void generateWave();
 
 private:
-double currentAngle, angleDelta;
+
 
 };
 

@@ -11,23 +11,11 @@
 #include "Oscillator.h"
 #include <math.h>
 
-Oscillator::Oscillator()
-{
-	currentAngle = 0.0;
-	angleDelta = 0.0;	
-};
+Oscillator::Oscillator(){};
 Oscillator::~Oscillator(){};
 
-void Oscillator::gen(AudioSampleBuffer &outputBuffer, 
-                    float oscfrequency, 
-                    int numSamples,
-                    int waveform) override
+void Oscillator::generateWave() 
 {	
-	float fs = 44100.0;
-	float pi = 3.1415926535897932384626433f;
-	int startSample = 0;
-	angleDelta = oscfrequency * 2.0 * pi / fs;
-
     switch (waveform)
     {
         case 0:

@@ -10,31 +10,27 @@
 
 #include "Filter.h"
 
-Filter::Filter (){} //Constructor
-Filter::~Filter(){} //Destructor
-
-void Filter::changeFrequency(float frequency) // reads value from frequency slider and updates values accordingly
+Filter::Filter ()
 {
-	m_f_a1 = frequency; 
+	cutOff = 0.99;
+	resonance = 0.0;
+	mode = LowPass;
 
-	m_f_a0 = m_f_a1- 1.0;
 
-	m_f_z1 = 0.0;
+} 
+Filter::~Filter(){} 
 
-}
-
-//DSP calculation for First order feed-forward filter
-void Filter::setFrequency (float* in, float Volume) 
+float Filter::process(float inputValue)
 {
-	//set delay elements 
-	float xn_1 = m_f_z1;
-
-	// calculate the difference equation
-	float yn_1 = m_f_a0 * (*in) + m_f_a1 * xn_1;
-	
-	//update the delay elements
-	m_f_z1 = *in;
-
-	//scales the calculated output values with volume (ouput)
-	*in = yn_1 * Volume;     
+	buf0 += cutOff * (inputValue - buf0);
+    buf1 += cutOff * (buf0 - buf1);
+    switch (mode) {
+        case : LowPass
+            return buf1;
+        case : HighPass
+            return inputValue - buf0;
+        case : BandPass
+            return buf0 - buf1;
+        default:
+            return 0.0;
 }
